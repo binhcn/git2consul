@@ -1,0 +1,254 @@
+## LOCAL ENVIRONMENT
+
+info.app.name: Zalopay Cashier v1.6
+info.app.description: This is microservice for Cashier Integration
+info.app.version: 1.0.0
+
+spring:
+  application:
+    name: pe-cashier-v16-payview
+  main:
+    allow-bean-definition-overriding: true
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin.sender.type: kafka
+  kafka.bootstrap-servers: 10.60.45.2:9092,10.50.45.5:9092,10.60.45.6:9092
+
+#==================================http server=================================================
+server:
+  port: 8080   # HTTP (Tomcat) port
+  deferredResultTimeout: 60000
+
+#==================================grpc server=================================================
+grpc:
+  port: 9090
+  nativeTransportEnable: false
+  keepAliveTime: 10000
+  keepAliveTimeout: 5000
+  keepAlivePermitWithoutCalls: true
+  useSsl: false
+  enableReactor: false
+
+#==================================okhttp================================================
+okhttp:
+  ping-interval-second: 60
+  max-idle-connection: 10
+  keep-alive-duration-minute: 10
+  connection-timeout: 0
+  read-timeout: 0
+  write-timeout: 0
+  call-timeout: 0
+  
+#==================================redis========================================================
+redis:
+  redisNodes:
+    - "redis://10.60.45.5:8000"
+    - "redis://10.60.45.5:8002"
+    - "redis://10.60.45.5:8004"
+    - "redis://10.60.45.5:8001"
+    - "redis://10.60.45.5:8003"
+    - "redis://10.60.45.5:8005"
+  cluster: true
+  scanInterval: 2000
+  slaveConnectionMinimumIdleSize: 10
+  slaveConnectionPoolSize: 200
+  masterConnectionMinimumIdleSize: 10
+  masterConnectionPoolSize: 200
+  idleConnectionTimeout: 10000
+  connectTimeout: 10000
+  responseTimeout: 10000
+  retryAttempts: 3
+  retryInterval: 1000
+  reconnectionTimeout: 3000
+  failedAttempts: 3
+  readMode: MASTER
+  kryoCodec: true
+  cacheExpireMinute: 30
+  lock-acquire-time-millisecond: 10
+  codecType: kryo
+  
+#==================================tracing====================================================
+tracing:
+  enable: true 
+  kafka:
+    server-addr: "10.60.45.2:9092,10.50.45.5:9092,10.60.45.6:9092"
+    
+#==================================monitor===============================================
+monitor-config:
+  enable: true
+  intervalInMiliseconds: 1000
+  histogram: true
+  percentiles: 0.99
+  expiryMinutes: 1
+  bufferLength: 3
+  slaInNanos: 1, 2, 5, 10, 20, 30, 40, 50, 75, 100, 150, 200, 250, 500, 1000, 1500, 2000, 5000, 10000
+  stopTracking: false
+  
+management:
+  endpoints.web:
+    base-path: /
+    path-mapping:
+      prometheus: metrics
+      metrics: types
+    exposure.include: health, info, prometheus, metrics
+  metrics.enable:
+    http: true
+
+reactor:
+  threads: 8
+  queues: 4
+  
+#==================================tpe-config=================================================
+tpe-config:
+  clientId: 1
+  clientKey: abc123456
+  mode: grpc
+  poolSize: 16
+  rateLimit: 1000
+  grpcClient:
+    async: true
+    grpcHost: 10.60.45.55
+    grpcPort: 9714
+    useSsl: false
+    timeoutInSeconds: 5
+    poolSize: 16
+  httpClient:
+    url: https://loadtest.zalopay.com.vn/v001/tpe/
+    useProxy: false
+    timeout: 1000
+  methodNames:
+    getOrderInfo: "zpi/getorderinfo"
+    
+#==================================user-asset-config=============================================
+user-asset-config:
+  clientId: pe-cashier-payview
+  clientKey: qerSF56bQDgqn
+  mode: grpc
+  poolSize: 16
+  rateLimit: 1000
+  grpcClient:
+    async: true
+    grpcHost: ltgrpc-user-asset.zalopay.vn
+    grpcPort: 443
+    useSsl: true
+    timeoutInSeconds: 5
+    poolSize: 16
+  httpClient:
+    url:
+    useProxy: false
+    timeout: 1000
+    
+#==================================bank-function-config=========================================
+bank-function-config:
+  clientId: client1
+  clientKey: key1
+  mode: grpc
+  poolSize: 16
+  rateLimit: 1000
+  grpcClient:
+    async: true
+    grpcHost: ltgrpc-bank-function.zalopay.vn
+    grpcPort: 443
+    useSsl: true
+    timeoutInSeconds: 5
+    poolSize: 16
+  httpClient:
+    url:
+    useProxy: false
+    timeout: 1000
+
+#==================================merchant-permission-config===================================
+merchant-permission-config:
+  clientId: 1
+  clientKey: abc123456
+  mode: grpc
+  poolSize: 16
+  rateLimit: 1000
+  grpcClient:
+    async: true
+    grpcHost: 10.50.1.9
+    grpcPort: 9714
+    useSsl: false
+    timeoutInSeconds: 5
+    poolSize: 16
+  httpClient:
+    url:
+    useProxy: false
+    timeout: 1000
+    
+#==================================user-permission-config===================================
+user-permission-config:
+  clientId: client1
+  clientKey: key1
+  mode: grpc
+  poolSize: 16
+  rateLimit: 1000
+  grpcClient:
+    async: true
+    grpcHost: 10.50.1.9
+    grpcPort: 9714
+    useSsl: false
+    timeoutInSeconds: 5
+    poolSize: 16
+  httpClient:
+    url:
+    useProxy: false
+    timeout: 1000
+    
+#==================================promotion-config=============================================
+promotion-config:
+  clientId: 1
+  clientKey: abc123456
+  mode: grpc
+  poolSize: 16
+  rateLimit: 1000
+  grpcClient:
+    async: true
+    grpcHost: 10.50.1.9
+    grpcPort: 9714
+    useSsl: false
+    timeoutInSeconds: 5
+    poolSize: 16
+  httpClient:
+    url:
+    useProxy: false
+    timeout: 1000
+
+#==================================user-fee-config=========================================
+user-fee-config:
+  clientId: client1
+  clientKey: key1
+  mode: grpc
+  poolSize: 16
+  rateLimit: 1000
+  grpcClient:
+    async: true
+    grpcHost: ltgrpc-user-fee-v2.zalopay.vn
+    grpcPort: 443
+    useSsl: true
+    timeoutInSeconds: 5
+    poolSize: 16
+  httpClient:
+    url:
+    useProxy: false
+    timeout: 1000
+    
+#==================================consul-discovery=========================================
+consul-client:
+  host: 10.50.1.39
+  port: 7500
+  token: "3c7fd3e8-0268-62a6-8654-4432e33b8f07"
+  serviceName: "grpc-lt-cashier-integration-service"
+  enableClientLoadBalance: false
+
+#=================================client keys config============================================
+#====mapping: client-id:client-key=============
+cashier-client:
+  clients: 
+    mobileBe: mobileBe
+    gateway: gateway
+
+pool:
+  threads: 500
+  queues: 2000
